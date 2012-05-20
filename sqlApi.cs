@@ -46,7 +46,7 @@ public class sqlApi
     public static DataSet LookupCable(string item)
     {
         string cs = "URI=file:test.db";
-        string stm = "SELECT * FROM Cable";
+        string stm = "SELECT * FROM Cable WHERE Name LIKE " + item;
         DataSet ds;
 
         using(SqliteConnection con = new SqliteConnection(cs))

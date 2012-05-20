@@ -6,6 +6,8 @@ using System.Drawing;
 public class MainForm : Form
 {
     private TextBox tb;
+    private DataGridView dgv;
+
     public MainForm()
     {
         // Build components
@@ -14,23 +16,23 @@ public class MainForm : Form
 
         CenterToScreen();
         Text = "Kapalgrunnur";
-        Size = new Size(300,300);
+        Size = new Size(500,500);
     }
 
     void InitUI()
     {
         FlowLayoutPanel inputPanel = new FlowLayoutPanel();
         FlowLayoutPanel wholePanel = new FlowLayoutPanel();
-        tb = new TextBox();
         Button btnOK = new Button();
-        DataGridView dgv = new DataGridView();
+        tb = new TextBox();
+        dgv = new DataGridView();
          
         // panel settings.
         inputPanel.FlowDirection = FlowDirection.LeftToRight;
-        inputPanel.Parent = wholePanel;
         wholePanel.FlowDirection = FlowDirection.TopDown;
         wholePanel.Parent = this;
-        wholePanel.Dock = DockStyle.Top;
+        wholePanel.Dock = DockStyle.Fill;
+        wholePanel.Controls.Add(inputPanel);
 
         // tb settings.
         tb.Parent = inputPanel;
@@ -40,10 +42,9 @@ public class MainForm : Form
         btnOK.Text = "Velja";
         btnOK.Click += new EventHandler(OnSelect);
 
-        // dgv settings.
-        dgv.Parent = this;
-        dgv.Dock = DockStyle.Fill;
 
+        // dgv settings.
+        wholePanel.Controls.Add(dgv);
     }
 
     void AddMenu()
@@ -67,7 +68,7 @@ public class MainForm : Form
     void OnSelect(object sender, EventArgs e)
     {
         DataSet ds = sqlApi.LookupCable(tb.Text);
-        dgv.DataSource = ds.Table["Cable"];
+        dgv.DataSource = ds.Tables["Cable"];
     }
 
     void OnNew(object sender, EventArgs e)
