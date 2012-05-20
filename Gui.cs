@@ -38,6 +38,7 @@ public class MainForm : Form
         // btnOK settings.
         btnOK.Parent = inputPanel;
         btnOK.Text = "Velja";
+        btnOK.Click += new EventHandler(OnSelect);
 
         // dgv settings.
         dgv.Parent = this;
@@ -65,8 +66,8 @@ public class MainForm : Form
 
     void OnSelect(object sender, EventArgs e)
     {
-        /*DataSet ds = sqlApi.LookupCable(tb.Text);
-        Console.WriteLine(ds);*/
+        DataSet ds = sqlApi.LookupCable(tb.Text);
+        dgv.DataSource = ds.Table["Cable"];
     }
 
     void OnNew(object sender, EventArgs e)
