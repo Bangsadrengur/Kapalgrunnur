@@ -3,88 +3,70 @@ using System.Data;
 using System.Windows.Forms;
 using System.Drawing;
 
-/*public class MainForm : Form
-{
-    private SeekForm sf;
-    private ResultForm rf;
-
-    public MainForm()
-    {
-        sf = new SeekForm();
-        rf = new ResultForm();
-    }
-
-    public void SetSeek()
-    {
-        this = sf;
-        this.Refresh();
-    }
-
-    public void SetResult()
-    {
-        this = rf;
-        this.Refresh();
-    }
-}*/
-
-public class SeekForm : Form
+public class MainForm : Form
 {
     private TextBox tb;
-    private int BORDERPADDING = 40,
-    PANEL_SPACE = 8;
-
-    public SeekForm()
+    public MainForm()
     {
-      InitUI();
+        // Build components
+        AddMenu();
+        InitUI();
 
-      Text = "Kapalgrunnur";
-      Size = new Size(300,300);
-      CenterToScreen();
+        CenterToScreen();
+        Text = "Kapalgrunnur";
+        Size = new Size(300,300);
     }
 
     void InitUI()
     {
-      MenuStrip ms = new MenuStrip();
-      ToolStripMenuItem file = new ToolStripMenuItem("&File");
-      ToolStripMenuItem newDB = new ToolStripMenuItem(
-                  "&New", null, new EventHandler(OnNew));
-      ToolStripMenuItem exit = new ToolStripMenuItem(
-                  "E&xit", null, new EventHandler(OnExit));
-      Button btnOK = new Button();
-      int PANEL_HEIGHT = btnOK.Height + PANEL_SPACE;
-      tb = new TextBox();
-      Panel btnPnl = new Panel();
+        FlowLayoutPanel inputPanel = new FlowLayoutPanel();
+        FlowLayoutPanel wholePanel = new FlowLayoutPanel();
+        tb = new TextBox();
+        Button btnOK = new Button();
+        DataGridView dgv = new DataGridView();
+         
+        // panel settings.
+        inputPanel.FlowDirection = FlowDirection.LeftToRight;
+        inputPanel.Parent = wholePanel;
+        wholePanel.FlowDirection = FlowDirection.TopDown;
+        wholePanel.Parent = this;
+        wholePanel.Dock = DockStyle.Top;
 
-      newDB.ShortcutKeys = Keys.Control | Keys.N;
-      file.DropDownItems.Add(newDB);
-      file.DropDownItems.Add(exit);
+        // tb settings.
+        tb.Parent = inputPanel;
 
-      ms.Parent = this;
-      ms.Items.Add(file);
-      MainMenuStrip = ms;
-      
-      tb.Parent = this;
-      tb.Width = this.Width-BORDERPADDING;
-      int X = (this.Width - tb.Width)/2;
-      int Y = (this.Height - tb.Height)/2;
-      tb.Location = new Point(X,Y);
+        // btnOK settings.
+        btnOK.Parent = inputPanel;
+        btnOK.Text = "Velja";
 
-      btnPnl.Parent = this;
-      btnPnl.Dock = DockStyle.Bottom;
+        // dgv settings.
+        dgv.Parent = this;
+        dgv.Dock = DockStyle.Fill;
 
-      X += btnOK.Width;
-      Y = (PANEL_HEIGHT - btnOK.Height) / 2;
-
-      btnOK.Text = "Velja";
-      btnOK.Parent = btnPnl;
-      btnOK.Location = new Point(this.Width-X, Y);
-      btnOK.Click += new EventHandler(OkClicked);
     }
 
-    void OkClicked(object sender, EventArgs e)
+    void AddMenu()
     {
-        DataSet ds = sqlApi.LookupCable(tb.Text);
-        Console.WriteLine(ds);
+        MainMenu menu = new MainMenu();
+        this.Menu = menu;
+
+        MenuItem file = new MenuItem("&File");
+        MenuItem newDB = new MenuItem("&New");
+        MenuItem exit = new MenuItem("E&xit");
+        
+        exit.Click += new EventHandler(OnExit);
+        newDB.Click += new EventHandler(OnNew);
+
+        file.MenuItems.Add(newDB);
+        file.MenuItems.Add(exit);
+
+        menu.MenuItems.Add(file);
+    }
+
+    void OnSelect(object sender, EventArgs e)
+    {
+        /*DataSet ds = sqlApi.LookupCable(tb.Text);
+        Console.WriteLine(ds);*/
     }
 
     void OnNew(object sender, EventArgs e)
@@ -104,38 +86,9 @@ public class SeekForm : Form
     }
 }
 
-public class ResultForm : Form
-{
-    public ResultForm(object datasource)
-    {
-      MenuStrip ms = new MenuStrip();
-      ToolStripMenuItem file = new ToolStripMenuItem("&File");
-      ToolStripMenuItem exit = new ToolStripMenuItem(
-                  "E&xit", null, new EventHandler(OnExit));
-      DataGridView dgv = new DataGridView();
-
-      file.DropDownItems.Add(exit);
-      ms.Parent = this;
-      ms.Items.Add(file);
-      MainMenuStrip = ms;
-
-      dgv.Parent = this;
-      dgv.Dock = DockStyle.Fill;
-
-      dgv.DataSource = datasource;
-    }
-
-    void OnExit(object sender, EventArgs e)
-    {
-      Close();
-    }
-}
-
 public class InputDialog : Form
 {
     private TextBox tb;
-    //private int BORDERPADDING = 0,
-    //PANEL_SPACE = 8;
 
     public InputDialog()
     {
@@ -176,7 +129,7 @@ public class Keyrsla
 {
     public static void Main(string[] args)
     {
-       Application.Run(new SeekForm());
+        Application.Run(new MainForm());
     }
 }
 
